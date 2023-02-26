@@ -1,3 +1,17 @@
+import React from "react";
+
+function handleEditAvatarClick() {
+  document.querySelector(".popup_type_avatar").classList.add("popup_opened");
+}
+function handleEditProfileClick() {
+  document
+    .querySelector(".popup_type_profile-info")
+    .classList.add("popup_opened");
+}
+function handleAddPlaceClick() {
+  document.querySelector(".popup_type_card-add").classList.add("popup_opened");
+}
+
 function Main() {
   return (
     <main className="main page__main">
@@ -5,17 +19,28 @@ function Main() {
         <div className="profile__avatar-container">
           <img className="profile__avatar" alt="аватар" />
           <div className="profile__cover">
-            <button className="profile__avatar-btn"></button>
+            <button
+              className="profile__avatar-btn"
+              onClick={handleEditAvatarClick}
+            ></button>
           </div>
         </div>
         <div className="profile__info">
           <div className="profile__title">
             <h1 className="profile__name">Просто чел</h1>
-            <button className="profile__edit-btn" type="button"></button>
+            <button
+              onClick={handleEditProfileClick}
+              className="profile__edit-btn"
+              type="button"
+            ></button>
           </div>
           <p className="profile__subtitle">Работяга</p>
         </div>
-        <button className="profile__add-btn" type="button"></button>
+        <button
+          className="profile__add-btn"
+          type="button"
+          onClick={handleAddPlaceClick}
+        ></button>
       </section>
 
       <section
