@@ -1,8 +1,18 @@
 import React from "react";
 
-function PopupWithForm({ name, title, btnText = "Сохранить", children }) {
+function PopupWithForm({
+  name,
+  title,
+  isOpen,
+  onClose,
+  btnText = "Сохранить",
+  children,
+}) {
   return (
-    <div className={`popup popup_type_${name}`}>
+    <div
+      className={`popup popup_type_${name} 
+    ${isOpen ? `popup_opened` : ""}`}
+    >
       <div className="popup__container">
         <h2 className="popup__title">{title}</h2>
         <form
@@ -17,7 +27,11 @@ function PopupWithForm({ name, title, btnText = "Сохранить", children }
             {btnText}
           </button>
         </form>
-        <button className="popup__close-btn" type="reset"></button>
+        <button
+          className="popup__close-btn"
+          type="reset"
+          onClick={onClose}
+        ></button>
       </div>
     </div>
   );

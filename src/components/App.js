@@ -1,20 +1,76 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
+import api from "../utils/Api";
 
 function App() {
+  // хуки состояния
+  const [isEditProfilePopupOpen, SetEditProfilePopupOpen] =
+    React.useState(false);
+  const [isAddPlacePopupOpen, SetAddPlacePopupOpen] = React.useState(false);
+  const [isEditAvatarPopupOpen, SetEditAvatarPopupOpen] = React.useState(false);
+  const [userInfo, setUserInfo] = React.useState({});
+  const [cards, setCards] = React.useState([]);
+  const [selectedCard, setSelectedCard] = React.useState(null);
+
+  function handleEditProfileClick() {
+    SetEditProfilePopupOpen(true);
+  }
+
+  function handleAddPlaceClick() {
+    SetAddPlacePopupOpen(true);
+  }
+
+  function handleEditAvatarClick() {
+    SetEditAvatarPopupOpen(true);
+  }
+
+  function closeAllPopups() {
+    SetEditProfilePopupOpen(false);
+    SetAddPlacePopupOpen(false);
+    SetEditAvatarPopupOpen(false);
+    setSelectedCard(null);
+  }
+
+  function handleCardClick(card) {
+    setSelectedCard(card);
+  }
+
+  React.useEffect(() => {
+    Promise.all([api.getUserInfo(), api.getInitialCards()])
+      .then(([userInfo, cards]) => {
+        setUserInfo(userInfo);
+        setCards(cards);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <>
       <Header />
 
-      <Main />
+      <Main
+        userAvatar={userInfo.avatar}
+        userName={userInfo.name}
+        userDescription={userInfo.about}
+        onEditProfile={handleEditProfileClick}
+        onAddPlace={handleAddPlaceClick}
+        onEditAvatar={handleEditAvatarClick}
+        onCardClick={handleCardClick}
+        cards={cards}
+      />
 
       <Footer />
 
-      <PopupWithForm name="profile-info" title="Редактировать профиль">
+      <PopupWithForm
+        isOpen={isEditProfilePopupOpen}
+        onClose={closeAllPopups}
+        name="profile-info"
+        title="Редактировать профиль"
+      >
         <input
           className="popup__input popup__input_type_name"
           id="user-name"
@@ -39,7 +95,12 @@ function App() {
         <span className="popup__input-err user-job-error"></span>
       </PopupWithForm>
 
-      <PopupWithForm name="card-add" title="Новое место">
+      <PopupWithForm
+        isOpen={isAddPlacePopupOpen}
+        onClose={closeAllPopups}
+        name="card-add"
+        title="Новое место"
+      >
         <input
           className="popup__input popup__input_type_card-name"
           placeholder="Название"
@@ -68,7 +129,12 @@ function App() {
         btnText="Да"
       ></PopupWithForm>
 
-      <PopupWithForm name="avatar" title="Обновить аватар">
+      <PopupWithForm
+        isOpen={isEditAvatarPopupOpen}
+        onClose={closeAllPopups}
+        name="avatar"
+        title="Обновить аватар"
+      >
         <input
           className="popup__input popup__input_type_avatar"
           placeholder="URL"
@@ -80,19 +146,7 @@ function App() {
         <span className="popup__input-err avatar-url-error"></span>
       </PopupWithForm>
 
-      <template id="card-element">
-        <li className="card">
-          <img className="card__img" />
-          <button className="card__del-btn" type="button"></button>
-          <div className="card__text">
-            <h2 className="card__title"></h2>
-            <div className="card__like-container">
-              <button className="card__like-btn" type="button"></button>
-              <p className="card__like-counter"></p>
-            </div>
-          </div>
-        </li>
-      </template>
+      <ImagePopup card={selectedCard} onClose={closeAllPopups} />
     </>
   );
 }

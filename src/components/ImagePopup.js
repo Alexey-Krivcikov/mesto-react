@@ -1,14 +1,24 @@
 import React from "react";
 
-function ImagePopup() {
+function ImagePopup({ onClose, card }) {
   return (
-    <div className="popup popup_type_card-open">
+    <div className={`popup popup_type_card-open ${card ? "popup_opened" : ""}`}>
       <div className="popup__card-container">
         <figure className="popup__item">
-          <img className="popup__img" src="#" alt="#" />
-          <figcaption className="popup__img-desc"></figcaption>
+          <img
+            className="popup__img"
+            src={card ? card.link : ""}
+            alt={card ? card.name : ""}
+          />
+          <figcaption className="popup__img-desc">
+            {card ? card.name : ""}
+          </figcaption>
         </figure>
-        <button className="popup__close-btn" type="reset"></button>
+        <button
+          className="popup__close-btn"
+          type="reset"
+          onClick={onClose}
+        ></button>
       </div>
     </div>
   );
