@@ -3,6 +3,9 @@ import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
 import PopupWithForm from "./PopupWithForm";
+import EditProfilePopup from "./EditProfilePopup";
+import EditAvatarPopup from "./EditAvatarPopup";
+import AddPlacePopup from "./AddPlacePopup ";
 import ImagePopup from "./ImagePopup";
 import api from "../utils/Api";
 import CurrentUserContext from "../contexts/CurrentUserContext";
@@ -64,6 +67,42 @@ function App() {
       .catch((err) => console.log(err));
   }
 
+  function handleUpdateUser(userData) {
+    api
+      .setUserInfo(userData)
+      .then((newUserData) => {
+        SetCurrentUser(newUserData);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function handleUpdateAvatar(userAvatar) {
+    api
+      .setAvatar(userAvatar)
+      .then((newUserAvatar) => {
+        SetCurrentUser(newUserAvatar);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function handleAddPlaceSubmit(cardData) {
+    api
+      .addNewCard(cardData)
+      .then((newCardData) => {
+        setCards([newCardData, ...cards]);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   React.useEffect(() => {
     Promise.all([api.getUserInfo(), api.getInitialCards()])
       .then(([userInfo, cards]) => {
@@ -89,63 +128,17 @@ function App() {
 
       <Footer />
 
-      <PopupWithForm
+      <EditProfilePopup
         isOpen={isEditProfilePopupOpen}
         onClose={closeAllPopups}
-        name="profile-info"
-        title="Редактировать профиль"
-      >
-        <input
-          className="popup__input popup__input_type_name"
-          id="user-name"
-          name="name"
-          type="text"
-          required
-          minlength="2"
-          maxlength="40"
-          placeholder="Имя"
-        />
-        <span className="popup__input-err user-name-error"></span>
-        <input
-          className="popup__input popup__input_type_job"
-          id="user-job"
-          name="about"
-          type="text"
-          required
-          minlength="2"
-          maxlength="200"
-          placeholder="Вид деятельности"
-        />
-        <span className="popup__input-err user-job-error"></span>
-      </PopupWithForm>
+        onUpdateUser={handleUpdateUser}
+      />
 
-      <PopupWithForm
+      <AddPlacePopup
         isOpen={isAddPlacePopupOpen}
         onClose={closeAllPopups}
-        name="card-add"
-        title="Новое место"
-      >
-        <input
-          className="popup__input popup__input_type_card-name"
-          placeholder="Название"
-          id="card-name"
-          name="name"
-          type="text"
-          minlength="2"
-          maxlength="30"
-          required
-        />
-        <span className="popup__input-err card-name-error"></span>
-        <input
-          className="popup__input popup__input_type_card-link"
-          placeholder="Ссылка на картинку"
-          id="card-link"
-          name="link"
-          type="url"
-          required
-        />
-        <span className="popup__input-err card-link-error"></span>
-      </PopupWithForm>
+        onAddPlaceSubmit={handleAddPlaceSubmit}
+      />
 
       <PopupWithForm
         name="delete"
@@ -153,22 +146,13 @@ function App() {
         btnText="Да"
       ></PopupWithForm>
 
-      <PopupWithForm
+      <EditAvatarPopup
         isOpen={isEditAvatarPopupOpen}
         onClose={closeAllPopups}
+        onUpdateAvatar={handleUpdateAvatar}
         name="avatar"
         title="Обновить аватар"
-      >
-        <input
-          className="popup__input popup__input_type_avatar"
-          placeholder="URL"
-          id="avatar-url"
-          name="avatar"
-          type="url"
-          required
-        />
-        <span className="popup__input-err avatar-url-error"></span>
-      </PopupWithForm>
+      />
 
       <ImagePopup card={selectedCard} onClose={closeAllPopups} />
     </CurrentUserContext.Provider>
