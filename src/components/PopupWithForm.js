@@ -22,7 +22,6 @@ function PopupWithForm({
           action="#"
           method="get"
           name={name}
-          novalidate
         >
           {children}
           <button className="popup__btn" type="submit">

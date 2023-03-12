@@ -12,6 +12,10 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
         inputRef.current.value /* Значение инпута, полученное с помощью рефа */,
     });
   }
+
+  React.useEffect(() => {
+    inputRef.current.value = "";
+  }, [isOpen]);
   return (
     <PopupWithForm
       isOpen={isOpen}

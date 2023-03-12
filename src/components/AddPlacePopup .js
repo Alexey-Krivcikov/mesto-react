@@ -21,6 +21,11 @@ function AddPlacePopup({ isOpen, onClose, onAddPlaceSubmit }) {
     });
   }
 
+  React.useEffect(() => {
+    setName("");
+    setLink("");
+  }, [isOpen]);
+
   return (
     <PopupWithForm
       isOpen={isOpen}
@@ -37,8 +42,8 @@ function AddPlacePopup({ isOpen, onClose, onAddPlaceSubmit }) {
         id="card-name"
         name="name"
         type="text"
-        minlength="2"
-        maxlength="30"
+        minLength="2"
+        maxLength="30"
         required
       />
       <span className="popup__input-err card-name-error"></span>
